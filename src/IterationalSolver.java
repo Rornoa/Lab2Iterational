@@ -125,30 +125,30 @@ public class IterationalSolver {
      * @return если не находит, возвращает последнюю перестановку без нулей на диагонали
      */
     public Replacement findReplacement() {
-        Replacement r = replacement;
         int[] notNullPermutation = createIndexesArray();
-        replace(r, 0, notNullPermutation);
-        if (r.resultKey == 1) r.indexes = notNullPermutation;
-        setMatrix(r);
-        return r;
+        replace(0, notNullPermutation);
+        if (replacement.resultKey == 1) replacement.indexes = notNullPermutation;
+        setMatrix(replacement);
+        return replacement;
     }
 
     /**
      * @replace - Перестановка строк
      */
-    void replace(Replacement replacement, int i, int[] notNullReplacement) {
+    void replace(int i, int[] notNullReplacement) {
         if (replacement.resultKey == 0) return;
         if (i == replacement.indexes.length - 1) {
             if (dusCheck())
                 replacement.resultKey = 0;
-            if (isDiagonalZero()) {
+            else if (isDiagonalZero()) {
                 System.arraycopy(replacement.indexes, 0, notNullReplacement, 0, rows);
                 replacement.resultKey = 1;
             }
         } else {
-            for (int j = i; j <= replacement.indexes.length - 1; j++) {
+            for (int j = i; j < replacement.indexes.length; j++) {
                 swapElementsInArray(replacement.indexes, i, j);
-                    replace(replacement, i + 1, notNullReplacement);
+                    replace(i + 1, notNullReplacement);
+                if (replacement.resultKey == 0) return;
                 swapElementsInArray(replacement.indexes, i, j);
             }
         }
